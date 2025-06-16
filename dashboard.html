@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Keuangan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #4361ee;
+            --income-color: #2ecc71;
+            --expense-color: #e74c3c;
+            --text-color: #2d3436;
+            --light-text: #636e72;
+            --border-color: #dfe6e9;
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa;
+            --modal-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a56e5;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .summary-card {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin-bottom: 10px;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .income-card .card-value {
+            color: var(--income-color);
+        }
+
+        .expense-card .card-value {
+            color: var(--expense-color);
+        }
+
+        .balance-card .card-value {
+            color: var(--primary-color);
+        }
+
+        /* Transaction List */
+        .transaction-section {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .transaction-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: white;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .income-icon {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--income-color);
+        }
+
+        .expense-icon {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--expense-color);
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transaction-name {
+            font-weight: 500;
+        }
+
+        .transaction-meta {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            display: flex;
+            gap: 8px;
+        }
+
+        .transaction-category {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .income-amount {
+            color: var(--income-color);
+        }
+
+        .expense-amount {
+            color: var(--expense-color);
+        }
+
+        /* Modal Styles (from previous implementation) */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .modal-content {
+            background: var(--bg-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--modal-shadow);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light-text);
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+        
+        /* Form Content */
+        #transactionForm {
+            padding: 20px 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--light-text);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group label i {
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+        
+        /* Transaction Type Selector */
+        .transaction-type-selector {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+        
+        .type-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--light-text);
+        }
+        
+        .type-btn i {
+            margin-right: 8px;
+        }
+        
+        .type-btn.income.active {
+            background: var(--income-color);
+            color: white;
+        }
+        
+        .type-btn.expense.active {
+            background: var(--expense-color);
+            color: white;
+        }
+        
+        /* Input Fields */
+        input, textarea {
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-bottom-color: var(--primary-color);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #b2bec3;
+        }
+        
+        .input-border {
+            height: 2px;
+            width: 0;
+            background: var(--primary-color);
+            transition: var(--transition);
+            margin-top: -1px;
+        }
+        
+        input:focus ~ .input-border,
+        textarea:focus ~ .input-border {
+            width: 100%;
+        }
+        
+        /* Amount Input */
+        .amount-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .currency-symbol {
+            position: absolute;
+            left: 0;
+            color: var(--light-text);
+            font-weight: 500;
+        }
+        
+        #transactionAmount {
+            padding-left: 30px;
+        }
+        
+        /* Quick Amount Buttons */
+        .quick-amount-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .quick-amount-buttons button {
+            flex: 1;
+            padding: 8px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 6px;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        
+        .quick-amount-buttons button:hover {
+            background: #e9ecef;
+        }
+        
+        /* Category Selector */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #f8f9fa;
+        }
+        
+        .category-item:hover {
+            background: #e9ecef;
+        }
+        
+        .category-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .category-item.active .category-icon {
+            color: white;
+        }
+        
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            margin-bottom: 6px;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        .category-item.active .category-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .category-item span {
+            font-size: 0.7rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        /* Date Input */
+        .date-input-container {
+            position: relative;
+        }
+        
+        #transactionDate {
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        
+        /* Textarea */
+        .textarea-container {
+            position: relative;
+        }
+        
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-cancel {
+            background: #f8f9fa;
+            color: var(--light-text);
+        }
+        
+        .btn-cancel:hover {
+            background: #e9ecef;
+        }
+        
+        .btn-submit {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #3a56e5;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--light-text);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #dfe6e9;
+        }
+
+        .empty-state p {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Manajemen Keuangan</div>
+            <button id="openModalBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tambah Transaksi
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card income-card">
+                <div class="card-title">Total Pemasukan</div>
+                <div class="card-value" id="totalIncome">Rp0</div>
+            </div>
+            <div class="summary-card expense-card">
+                <div class="card-title">Total Pengeluaran</div>
+                <div class="card-value" id="totalExpense">Rp0</div>
+            </div>
+            <div class="summary-card balance-card">
+                <div class="card-title">Saldo</div>
+                <div class="card-value" id="totalBalance">Rp0</div>
+            </div>
+        </div>
+
+        <!-- Transaction List -->
+        <div class="transaction-section">
+            <div class="section-header">
+                <h2 class="section-title">Daftar Transaksi</h2>
+                <div class="transaction-filter">
+                    <!-- Filter options can be added here -->
+                </div>
+            </div>
+            <div class="transaction-list" id="transactionList">
+                <!-- Transactions will be displayed here -->
+                <div class="empty-state">
+                    <i class="fas fa-wallet"></i>
+                    <h3>Belum ada transaksi</h3>
+                    <p>Mulai dengan menambahkan transaksi pertama Anda</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div class="modal" id="transactionModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Tambah Transaksi Baru</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <form id="transactionForm">
+                <!-- Jenis Transaksi -->
+                <div class="transaction-type-selector">
+                    <button type="button" class="type-btn income active" data-type="income">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>Pemasukan</span>
+                    </button>
+                    <button type="button" class="type-btn expense" data-type="expense">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>Pengeluaran</span>
+                    </button>
+                </div>
+                <input type="hidden" id="transactionType" value="income">
+                
+                <!-- Nama Transaksi -->
+                <div class="form-group">
+                    <label for="transactionName">
+                        <i class="fas fa-pen"></i> Nama Transaksi
+                    </label>
+                    <input type="text" id="transactionName" placeholder="Contoh: Gaji Bulanan" required>
+                    <div class="input-border"></div>
+                </div>
+                
+                <!-- Jumlah -->
+                <div class="form-group">
+                    <label for="transactionAmount">
+                        <i class="fas fa-coins"></i> Jumlah (Rp)
+                    </label>
+                    <div class="amount-input-container">
+                        <span class="currency-symbol">Rp</span>
+                        <input type="number" id="transactionAmount" placeholder="0" required>
+                        <div class="input-border"></div>
+                    </div>
+                    <div class="quick-amount-buttons">
+                        <button type="button" data-amount="50000">50K</button>
+                        <button type="button" data-amount="100000">100K</button>
+                        <button type="button" data-amount="200000">200K</button>
+                        <button type="button" data-amount="500000">500K</button>
+                    </div>
+                </div>
+                
+                <!-- Pilih Kategori -->
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Kategori</label>
+                    <div class="category-selector">
+                        <div class="category-grid">
+                            <div class="category-item active" data-category="salary">
+                                <div class="category-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <span>Gaji</span>
+                            </div>
+                            <div class="category-item" data-category="food">
+                                <div class="category-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <span>Makanan</span>
+                            </div>
+                            <div class="category-item" data-category="shopping">
+                                <div class="category-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <span>Belanja</span>
+                            </div>
+                            <div class="category-item" data-category="transport">
+                                <div class="category-icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <span>Transport</span>
+                            </div>
+                            <div class="category-item" data-category="bills">
+                                <div class="category-icon">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <span>Tagihan</span>
+                            </div>
+                            <div class="category-item" data-category="entertainment">
+                                <div class="category-icon">
+                                    <i class="fas fa-film"></i>
+                                </div>
+                                <span>Hiburan</span>
+                            </div>
+                            <div class="category-item" data-category="health">
+                                <div class="category-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <span>Kesehatan</span>
+                            </div>
+                            <div class="category-item" data-category="other">
+                                <div class="category-icon">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                                <span>Lainnya</span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="transactionCategory" value="salary">
+                </div>
+                
+                <!-- Tanggal -->
+                <div class="form-group">
+                    <label for="transactionDate">
+                        <i class="fas fa-calendar"></i> Tanggal
+                    </label>
+                    <div class="date-input-container">
+                        <input type="date" id="transactionDate" required>
+                        <div class="input-border"></div>
+                    </div>
+                </div>
+                
+                <!-- Catatan -->
+                <div class="form-group">
+                    <label for="transactionNotes">
+                        <i class="fas fa-sticky-note"></i> Catatan (Opsional)
+                    </label>
+                    <div class="textarea-container">
+                        <textarea id="transactionNotes" rows="3" placeholder="Tambahkan catatan..."></textarea>
+                        <div class="input-border"></div>
+                    </div>
+                </div>
+                
+                <!-- Tombol Aksi -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn btn-submit">
+                        <i class="fas fa-save"></i> Simpan Transaksi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toastNotification">
+        <i class="fas fa-check-circle"></i>
+        <span>Transaksi berhasil disimpan!</span>
+    </div>
+
+    <script>
+        // Initialize transactions from localStorage or empty array
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        
+        // DOM Elements
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modal = document.getElementById('transactionModal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.querySelector('.btn-cancel');
+        const transactionForm = document.getElementById('transactionForm');
+        const typeButtons = document.querySelectorAll('.type-btn');
+        const transactionTypeInput = document.getElementById('transactionType');
+        const quickAmountButtons = document.querySelectorAll('.quick-amount-buttons button');
+        const categoryItems = document.querySelectorAll('.category-item');
+        const transactionCategoryInput = document.getElementById('transactionCategory');
+        const toastNotification = document.getElementById('toastNotification');
+        const transactionList = document.getElementById('transactionList');
+        const totalIncomeElement = document.getElementById('totalIncome');
+        const totalExpenseElement = document.getElementById('totalExpense');
+        const totalBalanceElement = document.getElementById('totalBalance');
+        
+        // Open modal
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+            // Set default date to today
+            document.getElementById('transactionDate').valueAsDate = new Date();
+        });
+        
+        // Close modal
+        function closeModal() {
+            modal.style.display = 'none';
+            // Reset form
+            transactionForm.reset();
+            // Reset transaction type to income
+            document.querySelector('.type-btn.income').classList.add('active');
+            document.querySelector('.type-btn.expense').classList.remove('active');
+            transactionTypeInput.value = 'income';
+            // Reset category to salary
+            categoryItems.forEach(item => item.classList.remove('active'));
+            document.querySelector('.category-item[data-category="salary"]').classList.add('active');
+            transactionCategoryInput.value = 'salary';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Click outside modal to close
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // Transaction type selection
+        typeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                typeButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                transactionTypeInput.value = button.dataset.type;
+            });
+        });
+        
+        // Quick amount buttons
+        quickAmountButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const amount = button.dataset.amount;
+                document.getElementById('transactionAmount').value = amount;
+            });
+        });
+        
+        // Category selection
+        categoryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                categoryItems.forEach(cat => cat.classList.remove('active'));
+                item.classList.add('active');
+                transactionCategoryInput.value = item.dataset.category;
+            });
+        });
+        
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', { 
+                style: 'currency', 
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        // Get category icon
+        function getCategoryIcon(category) {
+            const icons = {
+                salary: 'money-bill-wave',
+                food: 'utensils',
+                shopping: 'shopping-bag',
+                transport: 'car',
+                bills: 'file-invoice-dollar',
+                entertainment: 'film',
+                health: 'heartbeat',
+                other: 'ellipsis-h'
+            };
+            return icons[category] || 'ellipsis-h';
+        }
+        
+        // Render transactions
+        function renderTransactions() {
+            // Calculate totals
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const totalExpense = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const balance = totalIncome - totalExpense;
+            
+            // Update summary cards
+            totalIncomeElement.textContent = formatCurrency(totalIncome);
+            totalExpenseElement.textContent = formatCurrency(totalExpense);
+            totalBalanceElement.textContent = formatCurrency(balance);
+            
+            // Clear transaction list
+            transactionList.innerHTML = '';
+            
+            if (transactions.length === 0) {
+                // Show empty state
+                transactionList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-wallet"></i>
+                        <h3>Belum ada transaksi</h3>
+                        <p>Mulai dengan menambahkan transaksi pertama Anda</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort transactions by date (newest first)
+            const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Render each transaction
+            sortedTransactions.forEach(transaction => {
+                const transactionElement = document.createElement('div');
+                transactionElement.className = 'transaction-item';
+                transactionElement.innerHTML = `
+                    <div class="transaction-info">
+                        <div class="transaction-icon ${transaction.type}-icon">
+                            <i class="fas fa-${getCategoryIcon(transaction.category)}"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <div class="transaction-name">${transaction.name}</div>
+                            <div class="transaction-meta">
+                                <span class="transaction-date">${new Date(transaction.date).toLocaleDateString('id-ID')}</span>
+                                <span class="transaction-category">
+                                    <i class="fas fa-tag"></i>
+                                    <span>${transaction.category === 'salary' ? 'Gaji' : 
+                                           transaction.category === 'food' ? 'Makanan' : 
+                                           transaction.category === 'shopping' ? 'Belanja' : 
+                                           transaction.category === 'transport' ? 'Transport' : 
+                                           transaction.category === 'bills' ? 'Tagihan' : 
+                                           transaction.category === 'entertainment' ? 'Hiburan' : 
+                                           transaction.category === 'health' ? 'Kesehatan' : 'Lainnya'}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type}-amount">
+                        ${transaction.type === 'income' ? '+' : '-'}${formatCurrency(transaction.amount)}
+                    </div>
+                `;
+                transactionList.appendChild(transactionElement);
+            });
+        }
+        
+        // Form submission
+        transactionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const transaction = {
+                type: transactionTypeInput.value,
+                name: document.getElementById('transactionName').value,
+                amount: parseFloat(document.getElementById('transactionAmount').value),
+                category: transactionCategoryInput.value,
+                date: document.getElementById('transactionDate').value,
+                notes: document.getElementById('transactionNotes').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Validate amount
+            if (isNaN(transaction.amount) || transaction.amount <= 0) {
+                showToast('Masukkan jumlah yang valid', 'error');
+                return;
+            }
+            
+            // Add transaction
+            transactions.push(transaction);
+            
+            // Save to localStorage
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            // Show success notification
+            showToast('Transaksi berhasil disimpan!');
+            
+            // Update UI
+            renderTransactions();
+            
+            // Close modal after delay
+            setTimeout(closeModal, 1000);
+        });
+        
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            toast.querySelector('span').textContent = message;
+            
+            // Set icon based on type
+            const icon = toast.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+                toast.style.background = 'var(--primary-color)';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+                toast.style.background = 'var(--expense-color)';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initial render
+        renderTransactions();
+    </script>
+</body>
+</html>
